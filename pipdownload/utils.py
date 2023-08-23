@@ -413,45 +413,22 @@ def get_platform() -> str:
 
 
 def download_package(index_url, directory, package, quiet, platform):
-    if platform == "original":
-        command = [
-            sys.executable,
-            "-m",
-            "pip",
-            "download",
-            "-vvv",
-            "--no-deps",
-            "-i",
-            index_url,
-            "--dest",
-            directory.path,
-            package,
-        ]
-    else:
-        # monkey patch: in case
-        distutils.util.get_platform = lambda: platform
-        command = [
-            "download",
-            "-vvv",
-            "--no-deps",
-            "-i",
-            index_url,
-            "--dest",
-            directory.path,
-            package,
-        ]
-    if quiet:
-        command.extend(["--progress-bar", "off", "-qqq"])
     try:
         print("[TEAMX] Before download package")
-        if platform == "original":
-            print("[TEAMX] Before checkall")
-            subprocess.check_call(command)
-            print("[TEAMX] After checkall")
-        else:
-            print("[TEAMX] Before pip main")
-            pip_main(command)
-            print("[TEAMX] After pip main")
+        command = [
+            "download",
+            "-vvv",
+            "--no-deps",
+            "-i",
+            index_url,
+            "--dest",
+            directory.path,
+            package,
+        ]
+        
+        print("[TEAMX] Before pip main")
+        pip_main(command)
+        print("[TEAMX] After pip main")
     except Exception as e:
         print("[TEAMX] Download package exception %s" % e)
         logger.error(
@@ -460,4 +437,5 @@ def download_package(index_url, directory, package, quiet, platform):
         )
         logger.error(e)
         return False
+    print("[TEAMX] After download package")
     return True

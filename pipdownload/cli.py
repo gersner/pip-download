@@ -33,7 +33,7 @@ session = CacheControl(sess)
     "--index-url",
     "index_url",
     type=click.STRING,
-    help="Pypi index.",
+    help="Pypi indexAA.",
 )
 @click.option(
     "-r",
