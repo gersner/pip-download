@@ -188,9 +188,12 @@ def pipdownload(
                 pass
             else:
                 raise Exception
+            print("[TEAMX] Downloaded package")
             file_names = os.listdir(directory.path)
+            print("[TEAMX] Listed files")
 
             for file_name in file_names:
+                print("[TEAMX] Resolving file %s" % file_name)
                 python_package = resolve_package_file(file_name)
                 url_list.append(python_package)
                 if python_package.name is None:
@@ -201,6 +204,7 @@ def pipdownload(
                     continue
                 url = mkurl_pypi_url(index_url, python_package.name)
                 try:
+                    print("[TEAMX] Downloaded url %s" % url)
                     r = session.get(url)
                     for file in get_file_links(r.text, url, python_package):
                         url_list.append(file)

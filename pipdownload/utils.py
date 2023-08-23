@@ -279,6 +279,7 @@ def download(url, dest_dir, quiet=False):
             )
             os.unlink(download_file_path)
 
+    print("[TEAMX] Download Function: Starting %s" % file_url)
     try:
         response = requests.get(file_url, stream=True)
         chunk_size = 1024
@@ -309,6 +310,8 @@ def download(url, dest_dir, quiet=False):
     except ConnectionError as e:
         logger.error("Cannot download file from url: %s" % file_url)
         logger.error(e)
+
+    print("[TEAMX] Download Function: Done %s" % file_url)
 
 
 quiet_download = partial(download, quiet=True)
@@ -416,6 +419,8 @@ def download_package(index_url, directory, package, quiet, platform):
             "-m",
             "pip",
             "download",
+            "-vvv",
+            "--no-deps",
             "-i",
             index_url,
             "--dest",
@@ -427,6 +432,8 @@ def download_package(index_url, directory, package, quiet, platform):
         distutils.util.get_platform = lambda: platform
         command = [
             "download",
+            "-vvv",
+            "--no-deps",
             "-i",
             index_url,
             "--dest",
@@ -436,11 +443,17 @@ def download_package(index_url, directory, package, quiet, platform):
     if quiet:
         command.extend(["--progress-bar", "off", "-qqq"])
     try:
+        print("[TEAMX] Before download package")
         if platform == "original":
+            print("[TEAMX] Before checkall")
             subprocess.check_call(command)
+            print("[TEAMX] After checkall")
         else:
+            print("[TEAMX] Before pip main")
             pip_main(command)
+            print("[TEAMX] After pip main")
     except Exception as e:
+        print("[TEAMX] Download package exception %s" % e)
         logger.error(
             "Can not use pip download to download the package %s on %s"
             " and Exception is below:" % (package, get_platform())
