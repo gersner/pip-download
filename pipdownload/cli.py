@@ -121,6 +121,8 @@ def pipdownload(
     pypi's `download files` page. It can be used to download Python packages across system platforms and
     Python versions.
     """
+    quiet=False
+    print(packages, index_url, requirement_file, dest_dir, whl_suffixes, platform_tags, python_versions, quiet, no_source, show_config, show_urls)
     if show_config:
         if not Path(settings.SETTINGS_FILE).exists():
             Path(settings.SETTINGS_FILE).parent.mkdir(parents=True, exist_ok=True)
@@ -204,17 +206,23 @@ def pipdownload(
                     continue
                 url = mkurl_pypi_url(index_url, python_package.name)
                 try:
-                    print("[TEAMX] Downloaded url %s" % url)
+                    print("[TEAMX] Downloading url %s" % url)
                     r = session.get(url)
+                    print("[TEAMX] Downloaded url %s" % url)
                     for file in get_file_links(r.text, url, python_package):
+                        print("[TEAMX] Get file %s" % file)
                         url_list.append(file)
                         if "none-any" in file:
+                            print("[TEAMX] File will download (1) %s" % file)
                             download(file, dest_dir)
+                            print("[TEAMX] File was downloaded (1) %s" % file)
                             continue
 
                         if ".tar.gz" in file or ".zip" in file:
                             if not no_source:
+                                print("[TEAMX] File will download (2) %s" % file)
                                 download(file, dest_dir)
+                                print("[TEAMX] File was downloaded (2) %s" % file)
                             continue
 
                         eligible = True
@@ -237,7 +245,9 @@ def pipdownload(
                                     eligible = False
 
                         if eligible:
+                            print("[TEAMX] File will download (3) %s" % file)
                             download(file, dest_dir)
+                            print("[TEAMX] File was downloaded (3) %s" % file)
 
                 except ConnectionError as e:
                     logger.error(

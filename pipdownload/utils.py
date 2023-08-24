@@ -251,6 +251,8 @@ def get_file_links(html_doc, base_url, python_package_local: PythonPackage) -> s
             link_href, link_text = link.groups()
             try:
                 href = link_href.strip()
+
+                print("[TEAMX] File links %s" % link_text)
                 python_package_on_page = resolve_package_file(link_text)
                 if python_package_local == python_package_on_page:
                     if href:
